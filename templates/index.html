@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h1 class="text-center mb-4">Campanhas Abertas</h1>
+
+        {# Display Flashed Messages if any redirect here #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {# Check if the campaigns list is not empty #}
+        {% if campaigns %}
+            <div class="list-group">
+                {% for campaign in campaigns %}
+                    <a href="{{ url_for('register', campaign_id=campaign.id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ campaign.name }}</h5>
+                            <small>Criada em: {{ campaign.creation_date.strftime('%d/%m/%Y') }}</small>
+                        </div>
+                        <p class="mb-1">Clique aqui para se inscrever nesta campanha.</p>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <p class="card-text text-center fs-5">
+                        Nenhuma campanha de cadastramento está aberta no momento.
+                        <br>
+                        Por favor, volte mais tarde!
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

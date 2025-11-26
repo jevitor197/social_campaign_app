@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <h1 class="mb-4">Links de Notificação para a Campanha <span class="text-primary">{{ campaign.name }}</span></h1>
+        
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">Instruções</h4>
+            <p>Clique em cada link abaixo para abrir o WhatsApp com a mensagem pré-preenchida. Você só precisa apertar "Enviar" em cada conversa.</p>
+            <hr>
+            <p class="mb-0">Para facilitar, você pode clicar com o botão direito e "Abrir em nova aba" para não perder esta página.</p>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h3>Links Gerados ({{ links|length }})</h3>
+            </div>
+            <div class="card-body">
+                {% if links %}
+                    <ul class="list-group">
+                        {% for item in links %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ item.name }}
+                                <a href="{{ item.link }}" target="_blank" class="btn btn-success">
+                                    Enviar para WhatsApp &rarr;
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-center">Nenhum link gerado. Não há participantes aprovados nesta campanha.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <a href="{{ url_for('campaign_detail', campaign_id=campaign.id) }}" class="btn btn-secondary">&larr; Voltar para os Detalhes da Campanha</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

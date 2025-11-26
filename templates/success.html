@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <h1 class="card-title text-success">Inscrição Recebida!</h1>
+                <p class="card-text fs-5">Obrigado por se inscrever.</p>
+                <p>Suas informações foram registradas com sucesso. Se você for aprovado(a), entraremos em contato pelo WhatsApp fornecido.</p>
+                <hr>
+                <a href="{{ url_for('home') }}" class="btn btn-primary">Voltar para a página inicial</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

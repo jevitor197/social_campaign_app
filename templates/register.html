@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        
+        {# Display Flashed Messages #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h2 class="text-center">Formulário de Inscrição</h2>
+                <h3 class="text-center text-primary">{{ campaign.name }}</h3>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('register', campaign_id=campaign.id) }}" method="POST">
+                    <div class="mb-3">
+                        <label for="full_name" class="form-label">Nome Completo do Paciente</label>
+                        <input type="text" class="form-control" id="full_name" name="full_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="birth_date" class="form-label">Data de Nascimento</label>
+                        <input type="date" class="form-control" id="birth_date" name="birth_date" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cpf" class="form-label">CPF</label>
+                        <input type="text" class="form-control" id="cpf" name="cpf" placeholder="000.000.000-00" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Endereço (Rua, Número)</label>
+                        <input type="text" class="form-control" id="address" name="address" placeholder="Ex: Rua Exemplo, 123" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address_complement" class="form-label">Complemento</label>
+                        <input type="text" class="form-control" id="address_complement" name="address_complement" placeholder="Ex: Bloco A, Ap 401" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="neighborhood" class="form-label">Bairro</label>
+                        <input type="text" class="form-control" id="neighborhood" name="neighborhood" placeholder="Ex: Centro" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="responsible_full_name" class="form-label">Nome Completo do Responsável</label>
+                        <input type="text" class="form-control" id="responsible_full_name" name="responsible_full_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="whatsapp_contact" class="form-label">Nº de WhatsApp (com DDD)</label>
+                        <input type="tel" class="form-control" id="whatsapp_contact" name="whatsapp_contact" placeholder="11999998888" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label d-block">Como você ouviu falar desse projeto?</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="how_heard" id="how_heard_instagram" value="Instagram/Facebook Bruno Peres" required>
+                            <label class="form-check-label" for="how_heard_instagram">Instagram/Facebook Bruno Peres</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="how_heard" id="how_heard_whatsapp" value="Grupos de Whatsapp">
+                            <label class="form-check-label" for="how_heard_whatsapp">Grupos de Whatsapp</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="how_heard" id="how_heard_bocaaboca" value="Boca a Boca">
+                            <label class="form-check-label" for="how_heard_bocaaboca">Boca a Boca</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="how_heard" id="how_heard_convite" value="Convite pessoalmente">
+                            <label class="form-check-label" for="how_heard_convite">Convite pessoalmente</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="how_heard" id="how_heard_other" value="Outros">
+                            <label class="form-check-label" for="how_heard_other">Outros</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="profession" class="form-label">Qual sua profissão?</label>
+                        <input type="text" class="form-control" id="profession" name="profession" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="household_members" class="form-label">Quantas pessoas moram na sua casa?</label>
+                        <input type="number" class="form-control" id="household_members" name="household_members" min="1" required>
+                    </div>
+
+                    <hr>
+                    <button type="submit" class="btn btn-primary w-100">Enviar Inscrição</button>
+                </form>
+            </div>
+        </div>
+        <div class="mt-4 text-center">
+            <a href="{{ url_for('home') }}" class="btn btn-secondary">&larr; Ver outras campanhas</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

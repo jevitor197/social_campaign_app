@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-md-12">
+        {# Display Flashed Messages #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+</div>
+
+<h1 class="mb-4">Detalhes da Campanha: <span class="text-primary">{{ campaign.name }}</span></h1>
+
+<div class="card mb-4 shadow-sm">
+    <div class="card-header">
+        Ações da Campanha
+    </div>
+    <div class="card-body">
+        <p>Use o formulário abaixo para gerar a mensagem de notificação para os aprovados.</p>
+        <form action="{{ url_for('generate_whatsapp_links', campaign_id=campaign.id) }}" method="POST">
+            <div class="mb-3">
+                <label for="message-template" class="form-label">Modelo de Mensagem para Aprovados</label>
+                <textarea class="form-control" id="message-template" name="message" rows="3" placeholder="Olá, {nome}! Você foi aprovado(a) na nossa campanha. Compareça no dia X em tal lugar."></textarea>
+                <div class="form-text">
+                    Use <code>{nome}</code> para inserir o nome do participante e <code>{nome_responsavel}</code> para o nome do responsável.
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success">Gerar Links do WhatsApp para Aprovados</button>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header">
+        Lista de Inscritos ({{ campaign.participants|length }})
+    </div>
+    <div class="card-body">
+        {% if campaign.participants %}
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Nome Completo</th>
+                    <th scope="col">WhatsApp</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" class="text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for participant in campaign.participants %}
+                <tr>
+                    <td>{{ participant.full_name }}</td>
+                    <td>{{ participant.whatsapp_contact }}</td>
+                    <td>
+                        {% if participant.is_approved %}
+                            <span class="badge bg-success">Aprovado</span>
+                        {% else %}
+                            <span class="badge bg-warning">Pendente</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if not participant.is_approved %}
+                            <form action="{{ url_for('approve_participant', participant_id=participant.id) }}" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-success btn-sm">Aprovar</button>
+                            </form>
+                        {% else %}
+                             <button type="button" class="btn btn-secondary btn-sm" disabled>Aprovado</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-center">Ninguém se inscreveu nesta campanha ainda.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{{ url_for('admin_panel') }}" class="btn btn-secondary">&larr; Voltar para o Painel</a>
+</div>
+{% endblock %}

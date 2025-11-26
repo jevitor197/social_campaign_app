@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-md-12">
+        {# Display Flashed Messages #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+</div>
+
+<div class="row">
+    <!-- Column for creating a new campaign -->
+    <div class="col-md-4">
+        <h2>Nova Campanha</h2>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <!-- Form to create a new campaign, pointing to the admin_panel route -->
+                <form action="{{ url_for('admin_panel') }}" method="POST">
+                    <div class="mb-3">
+                        <label for="campaign-name" class="form-label">Nome da Campanha</label>
+                        <input type="text" class="form-control" id="campaign-name" name="campaign_name" placeholder="Ex: Campanha de Verão" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Criar Campanha</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Column for listing existing campaigns -->
+    <div class="col-md-8">
+        <h2>Campanhas Existentes</h2>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if campaigns %}
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">Nome da Campanha</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Inscritos</th>
+                            <th scope="col" class="text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {# Loop through each campaign passed from the backend #}
+                        {% for campaign in campaigns %}
+                        <tr>
+                            <td>{{ campaign.name }}</td>
+                            <td>
+                                {% if campaign.is_open %}
+                                    <span class="badge bg-success">Aberta</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Fechada</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ campaign.participants|length }}</td>
+                            <td class="text-center">
+                                <!-- Form to toggle the campaign's status -->
+                                <form action="{{ url_for('toggle_campaign_status', campaign_id=campaign.id) }}" method="POST" style="display: inline;">
+                                    {% if campaign.is_open %}
+                                        <button type="submit" class="btn btn-warning btn-sm">Fechar</button>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-success btn-sm">Abrir</button>
+                                    {% endif %}
+                                </form>
+                                <a href="{{ url_for('campaign_detail', campaign_id=campaign.id) }}" class="btn btn-info btn-sm">Detalhes</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-center">Nenhuma campanha foi criada ainda.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+# Banco de dados
+project.db
+project.db_old
+
+# Arquivos Python
+__pycache__/
+*.pyc
+
+# Arquivos de ambiente
+.env

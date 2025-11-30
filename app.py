@@ -7,10 +7,15 @@ from datetime import datetime
 
 # --- App and Database Configuration ---
 basedir = os.path.abspath(os.path.dirname(__file__))
+db_uri = os.environ.get('DATABASE_URL')
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'uma-chave-secreta-muito-segura-mude-isso-depois'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'project.db')
+# Use PostgreSQL on Render, and SQLite locally
+if db_uri and db_uri.startswith("postgres://"):
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri.replace("postgres://", "postgresql://", 1)
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'project.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # --- Hardcoded Admin Credentials ---

@@ -18,6 +18,10 @@ else:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'project.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# --- Database URI Logging (for debugging) ---
+import sys
+print(f"DATABASE_URI_LOG: Using database URI: {app.config['SQLALCHEMY_DATABASE_URI']}", file=sys.stderr)
+
 # --- Hardcoded Admin Credentials ---
 # For simplicity, we hardcode the admin credentials.
 # For a real application, use a more secure method.

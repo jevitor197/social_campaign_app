@@ -11,16 +11,13 @@ db_uri = os.environ.get('DATABASE_URL')
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'uma-chave-secreta-muito-segura-mude-isso-depois'
-# Use PostgreSQL on Render, and SQLite locally
-if db_uri and db_uri.startswith("postgres://"):
+# Use PostgreSQL on Render if DATABASE_URL is set, otherwise use SQLite locally
+if db_uri:
+    # The DATABASE_URL from Render starts with "postgres://", but SQLAlchemy needs "postgresql://"
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri.replace("postgres://", "postgresql://", 1)
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'project.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# --- Database URI Logging (for debugging) ---
-import sys
-print(f"DATABASE_URI_LOG: Using database URI: {app.config['SQLALCHEMY_DATABASE_URI']}", file=sys.stderr)
 
 # --- Hardcoded Admin Credentials ---
 # For simplicity, we hardcode the admin credentials.
